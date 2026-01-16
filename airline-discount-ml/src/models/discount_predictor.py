@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import random
 from pathlib import Path
-from typing import Iterable, List
+from typing import List
 
 import joblib
 import numpy as np
@@ -66,6 +66,9 @@ class DiscountPredictor:
             raise ValueError("X must be a pandas DataFrame.")
         if X.empty:
             raise ValueError("X is empty.")
+        missing = set(REQUIRED_FEATURES) - set(X.columns)
+        if missing:
+            raise ValueError(f"Missing required columns: {sorted(missing)}")
 
 
     @staticmethod
