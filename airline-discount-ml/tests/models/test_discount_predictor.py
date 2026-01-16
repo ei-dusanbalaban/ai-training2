@@ -89,7 +89,7 @@ def test_fit_validates_missing_columns(synthetic_data):
     
     model = DiscountPredictor()
     
-    with pytest.raises(ValueError, match="column is not a column of the dataframe"):
+    with pytest.raises(ValueError, match="Missing required columns"):
         model.fit(X_bad, y.iloc[:1])
 
 
@@ -159,3 +159,18 @@ def test_predict_preserves_index():
     preds = model.predict(X)
     
     assert list(preds.index) == ["row_a", "row_b"]
+
+
+def test_predict_validates_missing_columns(synthetic_data):
+    """Test predict raises on missing required columns."""
+    X, y = synthetic_data
+    
+    model = DiscountPredictor()
+    model.fit(X, y)
+    
+    # Create DataFrame with missing columns
+    X_bad = pd.DataFrame({"distance_km": [3000], "history_trips": [5]})
+    
+    with pytest.raises(ValueError, match="Missing required columns"):
+        model.predict(X_bad)
+
